@@ -1,0 +1,78 @@
+{% extends 'master-ypbpi/base.html' %}
+{% load static %}
+{% block content %}
+
+<body class="login-layout light-login" style="margin-top: 10%;">
+    <div class="main-container">
+        <div class="main-content">
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <div class="login-container">
+                        <div class="center">
+
+                            <h1>
+                                <i class="ace-icon fa fa-leaf green"></i>
+                                <span class="red">Iteung</span>
+                                <span class="grey" id="id-text2">Website</span>
+                            </h1>
+                            <div class="space"></div>
+                        </div>
+
+                        <div class="space-6"></div>
+
+                        <div class="position-relative">
+                            <div id="login-box" class="login-box visible widget-box no-border">
+                                <div class="widget-body">
+                                    <div class="widget-main">
+                                        <h4 class="header blue lighter bigger">
+                                            <center>Login
+                                            </center>
+                                        </h4>
+
+                                        <div class="space-6"></div>
+
+                                        <form action="{% url 'login-gmail-polpos' %}" method=get>
+                                            {% csrf_token %}
+
+                                            <fieldset>
+
+
+                                                <div class="clearfix">
+                                                    <center>
+                                                        <p>
+                                                            Login dengan akun Gmail
+                                                        </p>
+                                                        <div class="space"></div>
+                                                    </center>
+
+                                                    <button class="width-100 btn btn-sm btn-primary">
+                                                        <i class="ace-icon fa fa-google-plus"></i>
+                                                        <span class="bigger-110">Login</span>
+                                                    </button>
+                                                </div>
+
+                                                <div class="space-4"></div>
+                                            </fieldset>
+                                        </form>
+
+
+                                    </div><!-- /.widget-main -->
+
+                                    <div class="toolbar clearfix">
+                                        <center style="padding: 10px 0;">&copy; Informatics Research Center</center>
+                                    </div>
+                                </div><!-- /.widget-body -->
+                            </div><!-- /.login-box -->
+
+                        </div>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.main-content -->
+        </div><!-- /.main-container -->
+    </div>
+</body>
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}
