@@ -3,6 +3,11 @@ import urllib.request, urllib.parse
 import json
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_protect
+import os
+from dotenv import load_dotenv
+ 
+dotenv_path = os.path.join(os.path.dirname(__file__), '../.env')
+load_dotenv(dotenv_path)
 
 def login(request):
     return render(request, 'auth-polpos/login.html', {})
@@ -11,10 +16,10 @@ def login(request):
 def login_verification(request):
     if request.method =="GET":
         gcode = request.GET['code']
-        client_id='519477122351-i4onlc5rlr6kgn1li9211cb2aoamun61.apps.googleusercontent.com'
+        client_id=os.getenv('CLIENT_ID')
         redirect_uri='http://localhost:8000/polpos/login-verification'
         grant_type='authorization_code'
-        client_secret='bVDO32A8QazGM2GVScRpQwjb'
+        client_secret=os.getenv('CLIENT_SECRET')
         post_data = [('code',gcode),('client_id',client_id),('redirect_uri',redirect_uri),('grant_type',grant_type),('client_secret',client_secret)]     # a sequence of two element tuples
         result = urllib.request.urlopen('https://accounts.google.com/o/oauth2/token', urllib.parse.urlencode(post_data).encode("utf-8"))
         content = result.read()
