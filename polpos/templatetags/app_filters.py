@@ -13,6 +13,22 @@ def reformat_hari(value):
         values = 'Senin, Selasa, Rabu, Kamis, Jumat, Sabtu'
     return values
 
+@register.filter(name='reformat_status')
+def reformat_status(value):
+    # print(value)
+    if value:
+        values = get_status(value)
+    else:
+        values = "Unidentified"
+    return values
+
+def get_status(status):
+    statuss = {
+        'T': 'Tidak Aktif',
+        'A': 'Aktif'
+    }.get(status, "")
+    return statuss
+
 def get_hari(hari):
     haris = {
         '1': 'Senin',

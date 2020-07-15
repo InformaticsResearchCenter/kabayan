@@ -30,16 +30,65 @@
                     </small>
                 </h1>
             </div><!-- /.page-header -->
-            <form action="{% url 'tambah-baak-penjadwalan' %}" method="post">
-                {% csrf_token %}
-                <button type="submit">Tambah</button>
-            </form>
+
             <div class="row">
                 <div class="col-xs-12">
                     <!-- PAGE CONTENT BEGINS -->
 
 
                     <div class="row">
+                        <div class="col-xs-12">
+                            <h3 class="header smaller lighter blue">Tahun Jadwal</h3>
+                            <form action="{% url 'tambah-baak-penjadwalan' %}" method="post">
+                                {% csrf_token %}
+                                <label style="float: left;">Tahun ID : </label>
+                                <div class="col-lg-3">
+                                    <select class="chosen-select" id="form-field-select-3"
+                                        data-placeholder="Pilih Tahun" name="tahun_id">
+                                        <option value=""> </option>
+                                        {% for tahun in tahuns %}
+                                        <option value="{{ tahun }}">
+                                            {{tahun}}
+                                        </option>
+
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-info btn-sm">
+
+                                        Tambah
+                                    </button>
+                                </span>
+
+                            </form>
+                            <br>
+                            <div>
+                                <table id="tahun-table" class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Tahun ID</th>
+                                            <th>Status</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {% if tahuns %}
+                                        {% for tahun in tahuns%}
+                                        <tr>
+                                            <td>{{ tahun.tahun_id }}</td>
+                                            <td>{{ tahun.status|reformat_status }}</td>
+
+                                            <td><button type="submit" class="btn btn-info btn-sm">Aktif</button> <button
+                                                    type="submit" class="btn btn-info btn-sm">Hapus</button></td>
+                                        </tr>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                         <div class="col-xs-12">
                             <h3 class="header smaller lighter blue">Penjadwalan</h3>
 
@@ -231,6 +280,8 @@
 <script type="text/javascript">
     jQuery(function ($) {
         //initiate dataTables plugin
+
+
         var myTable =
             $('#dynamic-table')
             //.wrap("<div class='dataTables_borderWrap' />")   //if you are applying horizontal scrolling (sScrollX) -->
@@ -500,6 +551,26 @@
           }
         ).css('padding-top', '12px');
         */
+
+
+        $('#tahun-table').DataTable({
+            "columnDefs": [{
+                    // The `data` parameter refers to the data for the cell (defined by the
+                    // `data` option, which defaults to the column being worked with, in
+                    // this case `data: 0`.
+                    //"render": function (data, type, row) {
+                      //  return data + ' (' + row[1] + ')';
+                    //},
+                    "targets": 2
+                },
+                {
+                    "visible": false,
+                    "targets": []
+                }
+            ]
+        });
+
+
 
 
     })

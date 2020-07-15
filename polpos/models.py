@@ -10,11 +10,13 @@ class PenjadwalanBAAK(models.Model):
     def __str__(self):
         return self.tahun_id
 
-class PenjadwalanProdi(models.Model):
+class PenjadwalanProdi(models.Model):    
+    kode_matkul = models.CharField(max_length=10)
     matkul = models.CharField(max_length=255)
     kode_prodi = models.CharField(max_length=5)
     total_jam = models.CharField(max_length=5)
     kelas = models.CharField(max_length=5)
+    kode_dosen = models.CharField(max_length=10)
     nama_dosen = models.CharField(max_length=255)
     tipe_hari = models.CharField(max_length=255, blank=True, null=True)
     tipe_ruangan = models.CharField(max_length=5)    
@@ -22,5 +24,5 @@ class PenjadwalanProdi(models.Model):
     tanggal_dibuat = models.DateTimeField(default=timezone.now)
     
     def __str__(self):
-        return self.matkul+" - "+self.kode_prodi+" - "+self.kelas
+        return self.kode_matkul+" - "+self.kode_prodi+" - "+self.kelas
 

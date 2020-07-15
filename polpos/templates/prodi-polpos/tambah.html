@@ -46,7 +46,8 @@
                                     name="matakuliah">
                                     <option value=""> </option>
                                     {% for matkul in matkuls %}
-                                    <option value="{{ matkul.0|upper }}"> {{ matkul.0|upper }}</option>
+                                    <option value="{{ matkul.0 }};{{matkul.1|upper}}"> {{ matkul.1|upper }}
+                                    </option>
                                     {% endfor %}
 
                                 </select>
@@ -83,7 +84,7 @@
                                     data-placeholder="Pilih dosen pengajar..." name="dosen">
                                     <option value=""> </option>
                                     {% for dosen in dosens %}
-                                    <option value="{{ dosen.0|upper }}"> {{ dosen.0|upper }}</option>
+                                    <option value="{{ dosen.0 }};{{ dosen.1|upper }}"> {{ dosen.1|upper }}</option>
                                     {% endfor %}
                                 </select>
                             </div>

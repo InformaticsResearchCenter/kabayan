@@ -1,4 +1,9 @@
-Django~=2.2.12
+django~=2.2.12
 python-dotenv~=0.13.0
 mysqlclient~=2.0.0
 django-cors-headers
+pandas
+prettytable
+pymysql
+xlsxwriter
+psutil

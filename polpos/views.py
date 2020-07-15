@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect
 import urllib.request, urllib.parse
 import json
-from django.http import HttpResponse
+import subprocess
 import os
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from dotenv import load_dotenv
 from django.db import connections
 from django.db import transaction
@@ -15,6 +16,22 @@ try:
     load_dotenv(dotenv_path)
 except:
     pass
+
+## Decorator Function ##
+def check_role(role):
+    def decorator(function):
+        @wraps(function)
+        def wrap(request, *args, **kwargs):
+            if request.session.has_key('id_user') and request.session.has_key('role_user'):
+                role_user = request.session['role_user']
+                if role_user == role:
+                    return function(request, *args, **kwargs)
+                else:
+                    return HttpResponse('<script>history.back();</script>')
+            else:
+                return redirect('login-polpos')
+        return wrap
+    return decorator
 
 ## Query Function ##
 def query_get_all(db_name, query):
@@ -66,6 +83,7 @@ def login_verification(request):
         
         # email = "akademik@poltekpos.ac.id"
         email = "d4ti@poltekpos.ac.id"
+        # email = "d3ti@poltekpos.ac.id"
         # email = "bak@polpos.ac.id"
         
         query = """
@@ -82,6 +100,7 @@ def login_verification(request):
         
         
         if row and dct2['email_verified'] == True:
+            request.session['email_user'] = row[0]
             request.session['id_user'] = row[1]
             request.session['role_user'] = str(row[2]).replace(".","").replace("100","").replace("101","")
             request.session['prodi_user'] = row[3]
@@ -115,47 +134,15 @@ def logout(request):
         del request.session['id_user']
         del request.session['role_user']
         del request.session['prodi_user']
+        del request.session['email_user']
     except:
         pass
     return redirect('login-polpos')
 
-def check_role(request, role, url, context):
-    if request.session.has_key('id_user') and request.session.has_key('role_user'):
-        role_user = request.session['role_user']
-        if role_user == role:
-            return render(request, url, context)
-        else:
-            return HttpResponse('<script>history.back();</script>')
-    else:
-        return redirect('login-polpos')
-
-def check_role_post(role):
-    def decorator(function):
-        @wraps(function)
-        def wrap(request, *args, **kwargs):
-            if request.session.has_key('id_user') and request.session.has_key('role_user'):
-                role_user = request.session['role_user']
-                if role_user == role:
-                    return function(request, *args, **kwargs)
-                else:
-                    return HttpResponse('<script>history.back();</script>')
-            else:
-                return redirect('login-polpos')
-        return wrap
-    return decorator
-
-# def check_role_post(func):
-#     if request.session.has_key('id_user') and request.session.has_key('role_user'):
-#         role_user = request.session['role_user']
-#         if role_user == role:
-#             func()
-#         else:
-#             return HttpResponse('<script>history.back();</script>')
-#     else:
-#         return redirect('login-polpos')
-
+@check_role("245")
 def baak_penjadwalan(request):
-    tahuns = PenjadwalanBAAK.objects.all()
+    tahuns = PenjadwalanBAAK.objects.all().order_by('-tahun_id')
+    print(tahuns)
     if request.method == "POST":
         tahun_id = request.POST['tahun_id']
         jadwals = PenjadwalanProdi.objects.filter(tahun_id_id=tahun_id)
@@ -164,54 +151,70 @@ def baak_penjadwalan(request):
             'jadwals': jadwals,
             'selected': PenjadwalanBAAK.objects.filter(tahun_id=tahun_id)
         }
-        print(context)
     else:
         context = {
             'tahuns': tahuns,
             'jadwals': '',        
             'selected':''
         }
-        print(context)
-    return check_role(request, "245", 'baak-polpos/penjadwalan.html', context)
+    return render(request, 'baak-polpos/penjadwalan.html', context)
 
-@check_role_post("245")
+@check_role("245")
 def tambah_baak_penjadwalan(request):
     if request.method == "POST":
         pb = PenjadwalanBAAK()
-        pb.tahun_id = '20201'
-        pb.status = 'Asiap'
+        pb.tahun_id = request.POST['tahun_id']
+        pb.status = 'A'
         pb.save()
         return redirect('baak-penjadwalan')
 
+@check_role("245")
+def buat_jadwal(request):
+    if request.method == "POST":
+        param = request.POST['tahun_id'] + ";" + request.session['email_user']
+        path_module = os.path.join(os.path.dirname(__file__), "penjadwalan.py")
+        subprocess.Popen(["python", path_module, param])
+        return redirect('baak-penjadwalan')
+        
+
+## PRODI VIEW ##
+
+@check_role("241")
 def prodi_penjadwalan(request):
-    jadwals = PenjadwalanProdi.objects.filter(kode_prodi="14")
+    prodi = request.session['prodi_user'] 
+    jadwals = PenjadwalanProdi.objects.filter(kode_prodi=prodi)
     context = {
         'jadwals': jadwals
     }
-    return check_role(request, "241", 'prodi-polpos/penjadwalan.html', context)
+    return render(request, 'prodi-polpos/penjadwalan.html', context)
 
-def tambah_prodi_penjadwalan(request):
-    if request.method == "POST":
+@check_role("241")
+def tambah_prodi_penjadwalan(request):    
+    prodi = request.session['prodi_user'] 
+    if request.method == "POST":        
+        matkul = request.POST['matakuliah'].split(";")
+        dosen = request.POST['dosen'].split(";")
         obj = PenjadwalanProdi.objects.create(
-            matkul=request.POST['matakuliah'],
-            kode_prodi="14",
+            kode_matkul=matkul[0],
+            matkul=matkul[1],
+            kode_prodi=prodi,
             total_jam=request.POST['total_jam'],
             kelas=request.POST['kelas'],
-            nama_dosen=request.POST['dosen'],
+            kode_dosen= dosen[0],
+            nama_dosen= dosen[1],
             tipe_hari=';'.join(filter(None,request.POST.getlist('tipe_hari'))),
             tipe_ruangan=request.POST['tipe_ruangan']
             )
         obj.save()
         return redirect('tambah-prodi-penjadwalan')
     else:
-        prodi = "14"
         query_matkul = """
-                SELECT Nama FROM simpati.simak_mst_matakuliah WHERE ProdiID="{}" and KurikulumID = (SELECT KurikulumID FROM simak_mst_matakuliah WHERE ProdiID="{}" group by MKID DESC limit 1)
+                SELECT MKKode, Nama FROM simpati.simak_mst_matakuliah WHERE ProdiID="{}" and KurikulumID = (SELECT KurikulumID FROM simak_mst_matakuliah WHERE ProdiID="{}" group by MKID DESC limit 1)
                 """.format(prodi, prodi)
         rows_matkul = query_get_all('simpati', query_matkul)
         
         query_dosen = """
-                SELECT Nama FROM simpati.simak_mst_dosen WHERE Homebase="{}";
+                SELECT Login, Nama FROM simpati.simak_mst_dosen WHERE Homebase="{}";
                 """.format(prodi)
         rows_dosen = query_get_all('simpati', query_dosen)
         
@@ -221,7 +224,12 @@ def tambah_prodi_penjadwalan(request):
             'dosens' : rows_dosen,
             'kelass'  : rows_kelas,
         }
-        return check_role(request, "241", 'prodi-polpos/tambah.html', context)
+        return render(request, 'prodi-polpos/tambah.html', context)
+
+
+
+
+
 
 # def get_list_dosen(request):
 #     if request.method == "GET" and request.is_ajax():
