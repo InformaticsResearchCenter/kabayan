@@ -13,8 +13,11 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 from dotenv import load_dotenv
  
-dotenv_path = os.path.join(os.path.dirname(__file__), '../.env')
-load_dotenv(dotenv_path)
+try:
+    dotenv_path = os.path.join(os.path.dirname(__file__), '../.env')
+    load_dotenv(dotenv_path)
+except:
+    pass
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -41,16 +44,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ypbpi.apps.YpbpiConfig',
-    'stimlog.apps.StimlogConfig',
-    'polpos.apps.PolposConfig',
-    # 'social_django'
+    'ypbpi',
+    'stimlog',
+    'polpos',    
+    'corsheaders',
 ]
 
-MIDDLEWARE = [
+MIDDLEWARE = [    
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -82,7 +86,10 @@ WSGI_APPLICATION = 'iteung.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {},
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
     'simpati': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('NAME_DB1'),
@@ -136,8 +143,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
+CORS_ORIGIN_ALLOW_ALL=True
 
-DATABASE_ROUTERS = ['iteung.routes.Routes']
 
 # AUTHENTICATION_BACKENDS = (
 #     'social_core.backends.google.GoogleOAuth2',

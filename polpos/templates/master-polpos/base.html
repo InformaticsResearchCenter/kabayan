@@ -12,6 +12,14 @@
 
     <link rel="stylesheet" href="{% static 'font-awesome/4.5.0/css/font-awesome.min.css' %}" />
 
+    <link rel="stylesheet" href="{% static 'css/jquery-ui.custom.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/chosen.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap-timepicker.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/daterangepicker.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datetimepicker.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap-colorpicker.min.css' %}" />
+
     <link rel="stylesheet" href="{% static 'css/fonts.googleapis.com.css' %}" />
 
     <link rel="stylesheet" href="{% static 'css/ace.min.css' %}" class="ace-main-stylesheet" id="main-ace-style" />
@@ -22,7 +30,260 @@
     <script src="{% static 'js/ace-extra.min.js' %}"></script>
 </head>
 
-{% block content %}
-{% endblock %}
+<body class="no-skin">
+    <div id="navbar" class="navbar navbar-default ace-save-state">
+        <div class="navbar-container ace-save-state" id="navbar-container">
+            <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
+                <span class="sr-only">Toggle sidebar</span>
+
+                <span class="icon-bar"></span>
+
+                <span class="icon-bar"></span>
+
+                <span class="icon-bar"></span>
+            </button>
+
+            <div class="navbar-header pull-left">
+                <a href="index.html" class="navbar-brand">
+                    <small>
+                        <i class="fa fa-leaf"></i>
+                        Iteung Website
+                    </small>
+                </a>
+            </div>
+
+            <div class="navbar-buttons navbar-header pull-right" role="navigation">
+                <ul class="nav ace-nav">
+
+
+                    <li class="light-blue dropdown-modal">
+                        <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                            <img class="nav-user-photo" src="{% static 'images/avatars/user.jpg' %}"
+                                alt="Jason's Photo" />
+                            <span class="user-info">
+                                <small>Welcome,</small>
+                                Jason
+                            </span>
+
+                            <i class="ace-icon fa fa-caret-down"></i>
+                        </a>
+
+                        <ul
+                            class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                            <li>
+                                <a href="#">
+                                    <i class="ace-icon fa fa-cog"></i>
+                                    Settings
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="profile.html">
+                                    <i class="ace-icon fa fa-user"></i>
+                                    Profile
+                                </a>
+                            </li>
+
+                            <li class="divider"></li>
+
+                            <li>
+                                <a href="{% url 'logout-polpos' %}">
+                                    <i class="ace-icon fa fa-power-off"></i>
+                                    Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div><!-- /.navbar-container -->
+    </div>
+
+    <div class="main-container ace-save-state" id="main-container">
+        <script type="text/javascript">
+            try {
+                ace.settings.loadState('main-container')
+            } catch (e) {}
+        </script>
+
+        <div id="sidebar" class="sidebar                  responsive                    ace-save-state">
+            <script type="text/javascript">
+                try {
+                    ace.settings.loadState('sidebar')
+                } catch (e) {}
+            </script>
+
+
+<ul class="nav nav-list">
+    
+            {% if request.session.role_user == '245' %}
+            <li class="">
+                <a href="#">
+                    <i class="menu-icon fa fa-tachometer"></i>
+                    <span class="menu-text"> Dashboard </span>
+                </a>
+
+                <b class="arrow"></b>
+            </li>
+            <li class="">
+                <a href="{% url 'baak-penjadwalan' %}">
+                    <i class="menu-icon fa fa-tachometer"></i>
+                    <span class="menu-text"> Penjadwalan </span>
+                </a>
+
+                <b class="arrow"></b>
+            </li>
+            {% elif request.session.role_user == '241' %}
+            <li class="">
+                <a href="#">
+                    <i class="menu-icon fa fa-tachometer"></i>
+                    <span class="menu-text"> Dashboard </span>
+                </a>
+
+                <b class="arrow"></b>
+            </li>
+            <li class="">
+                <a href="{% url 'prodi-penjadwalan' %}">
+                    <i class="menu-icon fa fa-tachometer"></i>
+                    <span class="menu-text"> Penjadwalan </span>
+                </a>
+
+                <b class="arrow"></b>
+            </li>
+            {% else %}
+                <li class="">
+                    <a href="#">
+                        <i class="menu-icon fa fa-tachometer"></i>
+                        <span class="menu-text"> Dashboard </span>
+                    </a>
+
+                    <b class="arrow"></b>
+                </li>
+
+                <li class="">
+                    <a href="#" class="dropdown-toggle">
+                        <i class="menu-icon fa fa-desktop"></i>
+                        <span class="menu-text">
+                            UI &amp; Elements
+                        </span>
+
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+
+                    <b class="arrow"></b>
+
+                    <ul class="submenu">
+                        <li class="">
+                            <a href="#" class="dropdown-toggle">
+                                <i class="menu-icon fa fa-caret-right"></i>
+
+                                Layouts
+                                <b class="arrow fa fa-angle-down"></b>
+                            </a>
+
+                            <b class="arrow"></b>
+
+                            <ul class="submenu">
+                                <li class="">
+                                    <a href="top-menu.html">
+                                        <i class="menu-icon fa fa-caret-right"></i>
+                                        Top Menu
+                                    </a>
+
+                                    <b class="arrow"></b>
+                                </li>
+
+                                <li class="">
+                                    <a href="two-menu-1.html">
+                                        <i class="menu-icon fa fa-caret-right"></i>
+                                        Two Menus 1
+                                    </a>
+
+                                    <b class="arrow"></b>
+                                </li>
+
+                                <li class="">
+                                    <a href="two-menu-2.html">
+                                        <i class="menu-icon fa fa-caret-right"></i>
+                                        Two Menus 2
+                                    </a>
+
+                                    <b class="arrow"></b>
+                                </li>
+
+                                <li class="">
+                                    <a href="mobile-menu-1.html">
+                                        <i class="menu-icon fa fa-caret-right"></i>
+                                        Default Mobile Menu
+                                    </a>
+
+                                    <b class="arrow"></b>
+                                </li>
+
+                                <li class="">
+                                    <a href="mobile-menu-2.html">
+                                        <i class="menu-icon fa fa-caret-right"></i>
+                                        Mobile Menu 2
+                                    </a>
+
+                                    <b class="arrow"></b>
+                                </li>
+
+                                <li class="">
+                                    <a href="mobile-menu-3.html">
+                                        <i class="menu-icon fa fa-caret-right"></i>
+                                        Mobile Menu 3
+                                    </a>
+
+                                    <b class="arrow"></b>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="">
+                            <a href="typography.html">
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                Typography
+                            </a>
+
+                            <b class="arrow"></b>
+                        </li>
+
+
+                    </ul>
+                </li>
+
+
+            {% endif %}
+            </ul><!-- /.nav-list -->
+
+            <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+                <i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state"
+                    data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+            </div>
+        </div>
+        {% block content %}
+        {% endblock %}
+
+        {% block script %}
+        {% endblock %}
+        <div class="footer">
+            <div class="footer-inner">
+                <div class="footer-content">
+                    <span class="bigger-120">
+                        <span class="blue bolder">Iteung</span>
+                        Website &copy; 2020
+                    </span>
+
+
+                </div>
+            </div>
+        </div>
+
+        <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+            <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+        </a>
+    </div><!-- /.main-container -->
+</body>
 
 </html>

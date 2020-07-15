@@ -1,0 +1,30 @@
+<!-- <script type="text/javascript">
+    $(document).ready(function () {
+        $("#checkAll").click(function (e) {
+            e.preventDefault();
+            var prodi = "14"
+            var data = {
+                prodi
+            };
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'get-list-dosen' %}",
+                data: data,
+                success: function (response) {
+                    //$("#form-field-select-3").val(response.data)
+                    console.log(response.data.length)
+                    console.log(response.data[0][0])
+                    var rows = response.data
+                    for (var i = 0; i < rows.length; i++) {
+                        $("#matakuliah").append('<option value=' + rows[i][0] + '>' + rows[
+                                i][0] +
+                            '</option>');
+                    }
+                },
+                error: function (response) {
+                    console.log(response)
+                }
+            })
+        })
+    })
+</script> -->
